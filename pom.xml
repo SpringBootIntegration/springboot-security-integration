@@ -23,6 +23,7 @@
         <!-- 依赖 -->
         <!-- 插件 -->
         <plugin.springboot.version>1.5.9.RELEASE</plugin.springboot.version>
+        <plugin.compiler.version>2.0.2</plugin.compiler.version>
     </properties>
 
     <dependencies>
@@ -56,6 +57,16 @@
                 <version>${plugin.springboot.version}</version>
                 <configuration>
                     <fork>true</fork>
+                </configuration>
+            </plugin>
+            <!-- 设置 java sdk 版本 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${plugin.compiler.version}</version>
+                <configuration>
+                    <source>${system.java.version}</source>
+                    <target>${system.java.version}</target>
                 </configuration>
             </plugin>
         </plugins>

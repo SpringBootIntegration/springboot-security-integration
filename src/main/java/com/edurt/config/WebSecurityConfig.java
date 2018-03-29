@@ -54,8 +54,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable();
         // 允许直接访问/路径
         http.authorizeRequests().antMatchers("/").permitAll()
+                // 使其支持跨域
+//                .requestMatchers(CorsUtils :: isPreFlightRequest).permitAll()
                 // 其他路径需要授权访问
                 .anyRequest().authenticated()
                 // 指定登录页面
