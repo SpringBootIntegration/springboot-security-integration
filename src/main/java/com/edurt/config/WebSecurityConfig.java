@@ -17,6 +17,7 @@
  */
 package com.edurt.config;
 
+import com.edurt.hander.CustomAuthenticationFailHander;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,6 +47,9 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private CustomAuthenticationFailHander customAuthenticationFailHander;
+
     @Bean
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
@@ -63,6 +67,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 // 指定登录页面
                 .and().formLogin().loginPage("/user/login")
+                // 指定登录失败跳转地址, 使用自定义错误信息
+                .failureHandler(customAuthenticationFailHander)
                 // 指定登录失败跳转地址
                 .failureUrl("/user/login?error").permitAll()
                 // 登录成功后的默认路径
