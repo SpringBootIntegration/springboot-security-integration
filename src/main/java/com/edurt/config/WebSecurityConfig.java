@@ -18,6 +18,7 @@
 package com.edurt.config;
 
 import com.edurt.hander.CustomAuthenticationFailHander;
+import com.edurt.hander.CustomAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,6 +51,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomAuthenticationFailHander customAuthenticationFailHander;
 
+    @Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
     @Bean
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
@@ -67,6 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 // 指定登录页面
                 .and().formLogin().loginPage("/user/login")
+                .successHandler(customAuthenticationSuccessHandler)
                 // 指定登录失败跳转地址, 使用自定义错误信息
                 .failureHandler(customAuthenticationFailHander)
                 // 指定登录失败跳转地址
@@ -80,11 +85,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         // 配置用户登录检索策略
-        auth.userDetailsService(userDetailsService())
-                // 配置密码策略
-                .passwordEncoder(passwordEncoder());
-//        auth.inMemoryAuthentication().withUser("user").password("123456").roles("USER")
-//                .and().withUser("admin").password("123456").roles("ADMIN");
+//        auth.userDetailsService(userDetailsService())
+//                // 配置密码策略
+//                .passwordEncoder(passwordEncoder());
+        auth.inMemoryAuthentication().withUser("user").password("123456").roles("USER")
+                .and().withUser("admin").password("123456").roles("ADMIN");
     }
 
     @Bean
