@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>登录页面</title>
 </head>
 <body>
 
-<form action="" method="post">
+<form action="/user/login" method="post">
     <table>
+        <tr>
+            <p th:if="${param.error}" class="bg-danger">有错误，请重试</p>
+        </tr>
         <tr>
             <td>用户名:</td>
             <td><input name="username" id="username" value=""/></td>
@@ -17,7 +20,7 @@
             <td><input name="password" id="password" value=""/></td>
         </tr>
         <tr>
-            <td colspan="2"><input type="submit" value="submit" /></td>
+            <td colspan="2"><input type="submit" value="submit"/></td>
         </tr>
     </table>
 </form>
