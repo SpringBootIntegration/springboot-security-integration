@@ -20,6 +20,7 @@ package com.edurt.config;
 import com.edurt.hander.CustomAccessDeniedHandler;
 import com.edurt.hander.CustomAuthenticationFailHander;
 import com.edurt.hander.CustomAuthenticationSuccessHandler;
+import com.edurt.point.UnauthorizedEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,6 +59,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
+    @Autowired
+    private UnauthorizedEntryPoint unauthorizedEntryPoint;
+
     @Bean
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
@@ -69,7 +73,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // AccessDeniedHandler仅适用于已通过身份验证的用户。未经身份验证的用户的默认行为是重定向到登录页面（或适用于正在使用的身份验证机制的任何内容）。
 //        http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
         http.csrf().disable();
-        http.exceptionHandling().accessDeniedPage("/403");
+//        http.exceptionHandling().accessDeniedPage("/403");
+        http.exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint);
         // 允许直接访问/路径
         http.authorizeRequests().antMatchers("/").permitAll()
                 // 使其支持跨域
