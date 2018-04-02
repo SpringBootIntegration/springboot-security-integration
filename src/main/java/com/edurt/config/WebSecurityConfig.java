@@ -17,6 +17,7 @@
  */
 package com.edurt.config;
 
+import com.edurt.encoder.CustomPasswordEncoder;
 import com.edurt.hander.CustomAccessDeniedHandler;
 import com.edurt.hander.CustomAuthenticationFailHander;
 import com.edurt.hander.CustomAuthenticationSuccessHandler;
@@ -63,6 +64,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    @Autowired
+    private CustomPasswordEncoder customPasswordEncoder;
+
     @Bean
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
@@ -103,7 +107,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .passwordEncoder(passwordEncoder());
         auth.inMemoryAuthentication().withUser("user").password("123456")
                 .and().withUser("admin").password("123456");
-        auth.userDetailsService(customUserDetailsService);
+        auth.userDetailsService(customUserDetailsService).passwordEncoder(customPasswordEncoder);
     }
 
     @Bean
