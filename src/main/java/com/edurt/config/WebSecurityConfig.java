@@ -21,6 +21,7 @@ import com.edurt.hander.CustomAccessDeniedHandler;
 import com.edurt.hander.CustomAuthenticationFailHander;
 import com.edurt.hander.CustomAuthenticationSuccessHandler;
 import com.edurt.point.UnauthorizedEntryPoint;
+import com.edurt.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,9 +32,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
  * WebSecurityConfig <br/>
@@ -61,6 +59,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UnauthorizedEntryPoint unauthorizedEntryPoint;
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Bean
     @Override
@@ -100,8 +101,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        auth.userDetailsService(userDetailsService())
 //                // 配置密码策略
 //                .passwordEncoder(passwordEncoder());
-        auth.inMemoryAuthentication().withUser("user").password("123456").roles("USER")
-                .and().withUser("admin").password("123456").roles("ADMIN");
+        auth.inMemoryAuthentication().withUser("user").password("123456")
+                .and().withUser("admin").password("123456");
+        auth.userDetailsService(customUserDetailsService);
     }
 
     @Bean
@@ -109,13 +111,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new Md5PasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        // 创建模拟用户
-        manager.createUser(User.withUsername("user").password("123456").roles("USER").build());
-        manager.createUser(User.withUsername("admin").password("123456").roles("ADMIN").build());
-        return manager;
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//        // 创建模拟用户
+//        manager.createUser(User.withUsername("user").password("123456").roles("USER").build());
+//        manager.createUser(User.withUsername("admin").password("123456").roles("ADMIN").build());
+//        return manager;
+//    }
 
 }
