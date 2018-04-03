@@ -22,6 +22,7 @@ import com.edurt.hander.CustomAccessDeniedHandler;
 import com.edurt.hander.CustomAuthenticationFailHander;
 import com.edurt.hander.CustomAuthenticationSuccessHandler;
 import com.edurt.point.UnauthorizedEntryPoint;
+import com.edurt.provider.CustomAuthenticationProvider;
 import com.edurt.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -67,6 +68,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomPasswordEncoder customPasswordEncoder;
 
+    @Autowired
+    private CustomAuthenticationProvider customAuthenticationProvider;
+
     @Bean
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
@@ -105,9 +109,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        auth.userDetailsService(userDetailsService())
 //                // 配置密码策略
 //                .passwordEncoder(passwordEncoder());
-        auth.inMemoryAuthentication().withUser("user").password("123456")
-                .and().withUser("admin").password("123456");
-        auth.userDetailsService(customUserDetailsService).passwordEncoder(customPasswordEncoder);
+        auth.authenticationProvider(customAuthenticationProvider);
+//        auth.inMemoryAuthentication().withUser("user").password("123456")
+//                .and().withUser("admin").password("123456");
+//        auth.userDetailsService(customUserDetailsService).passwordEncoder(customPasswordEncoder);
     }
 
     @Bean
