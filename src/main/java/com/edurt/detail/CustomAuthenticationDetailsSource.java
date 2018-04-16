@@ -15,31 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.edurt.controller.admin;
+package com.edurt.detail;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationDetailsSource;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * UserController <br/>
- * 描述 : UserController <br/>
+ * CustomAuthenticationDetailsSource <br/>
+ * 描述 : CustomAuthenticationDetailsSource <br/>
  * 作者 : qianmoQ <br/>
  * 版本 : 1.0 <br/>
- * 创建时间 : 2018-03-20 下午5:03 <br/>
+ * 创建时间 : 2018-04-03 下午11:38 <br/>
  * 联系作者 : <a href="mailTo:shichengoooo@163.com">qianmoQ</a>
  */
-@RestController
-@RequestMapping(value = "/admin")
-public class AdminController {
+@Component(value = "cstomAuthenticationDetailsSource")
+public class CustomAuthenticationDetailsSource implements AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> {
 
-    @PreAuthorize("hasRole('ADMIN') && hasPermission(#id, 'ADMIN')")
-    @RequestMapping(value = "info", method = RequestMethod.GET)
-    public String info(@RequestParam(value = "id") Long id) {
-        System.out.println("controller id = " + id);
-        return "我是管理员";
+    @Override
+    public WebAuthenticationDetails buildDetails(HttpServletRequest request) {
+        // 构建用户自定义的用户收集信息
+        return new CustomWebAuthenticationDetails(request);
     }
 
 }

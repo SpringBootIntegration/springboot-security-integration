@@ -17,6 +17,7 @@
  */
 package com.edurt.provider;
 
+import com.edurt.detail.CustomWebAuthenticationDetails;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,6 +44,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        // 抽取用户自定义的数据字段
+        CustomWebAuthenticationDetails details = (CustomWebAuthenticationDetails) authentication.getDetails();
+        System.out.println(details.getCaptcha());
+        System.out.println(details.getType());
+
         // 抽取需要授权的验证信息
         final String username = authentication.getName();
         final String password = authentication.getCredentials().toString();

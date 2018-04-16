@@ -21,6 +21,7 @@
     <properties>
         <system.java.version>1.8</system.java.version>
         <!-- 依赖 -->
+        <dependency.security.ldap.version>4.0.4.RELEASE</dependency.security.ldap.version>
         <!-- 插件 -->
         <plugin.springboot.version>1.5.9.RELEASE</plugin.springboot.version>
         <plugin.compiler.version>2.0.2</plugin.compiler.version>
@@ -46,6 +47,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <!-- 添加LDAP依赖 -->
+        <dependency>
+            <groupId>org.springframework.ldap</groupId>
+            <artifactId>spring-ldap-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+            <version>${dependency.security.ldap.version}</version>
         </dependency>
     </dependencies>
 

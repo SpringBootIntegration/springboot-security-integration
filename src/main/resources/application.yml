@@ -9,3 +9,18 @@ spring:
     mode: HTML5
     prefix: classpath:/templates/
     suffix: .html
+# ldap配置
+ldap:
+  # ldap授权地址
+  urls: ldap://localhost:389/
+  # base dn
+  base:
+    dn: dc=edurt,dc=com
+  # 登录ldap服务器的admin用户
+  username: cn=Manager,${ldap.base.dn}
+  # 登录ldap服务的admin用户密码
+  password: 111111
+  # 用户的登录检索路径
+  user:
+    dn:
+      pattern: uid={0}

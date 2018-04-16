@@ -17,6 +17,7 @@
  */
 package com.edurt.config;
 
+import com.edurt.detail.CustomAuthenticationDetailsSource;
 import com.edurt.encoder.CustomPasswordEncoder;
 import com.edurt.hander.CustomAccessDeniedHandler;
 import com.edurt.hander.CustomAuthenticationFailHander;
@@ -25,6 +26,8 @@ import com.edurt.point.UnauthorizedEntryPoint;
 import com.edurt.provider.CustomAuthenticationProvider;
 import com.edurt.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -71,6 +74,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
 
+    @Autowired
+    private CustomAuthenticationDetailsSource customAuthenticationDetailsSource;
+
     @Bean
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
@@ -99,17 +105,43 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/user/login?error").permitAll()
                 // 登录成功后的默认路径
                 .defaultSuccessUrl("/").permitAll()
+                // 使用自定义的AuthenticationDetailsSource
+                .authenticationDetailsSource(customAuthenticationDetailsSource)
                 // 退出登录后的默认路径
                 .and().logout().logoutSuccessUrl("/user/login").permitAll();
     }
 
+    @Value(value = "${ldap.urls}")
+    private String ldapUrls;
+
+    @Value(value = "${ldap.base.dn}")
+    private String ldapBaseDn;
+
+    @Value(value = "${ldap.username}")
+    private String ldapUsername;
+
+    @Value(value = "${ldap.password}")
+    private String ldapPassword;
+
+    @Value(value = "${ldap.user.dn.pattern}")
+    private String ldapUserDnPattern;
+
     @Autowired
+//    @ConfigurationProperties(prefix = "ldap")
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        // 使用ldap进行授权登录
+        auth.ldapAuthentication().contextSource()
+                // ldap://localhost:389/dc=edurt,dc=com,uid=2
+                .url(ldapUrls + ldapBaseDn)
+                .managerDn(ldapUsername)
+                .managerPassword(ldapPassword)
+                .and()
+                .userDnPatterns(ldapUserDnPattern);
         // 配置用户登录检索策略
 //        auth.userDetailsService(userDetailsService())
 //                // 配置密码策略
 //                .passwordEncoder(passwordEncoder());
-        auth.authenticationProvider(customAuthenticationProvider);
+//        auth.authenticationProvider(customAuthenticationProvider);
 //        auth.inMemoryAuthentication().withUser("user").password("123456")
 //                .and().withUser("admin").password("123456");
 //        auth.userDetailsService(customUserDetailsService).passwordEncoder(customPasswordEncoder);
